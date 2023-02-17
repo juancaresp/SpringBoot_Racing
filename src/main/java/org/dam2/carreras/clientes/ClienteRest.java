@@ -1,21 +1,77 @@
 package org.dam2.carreras.clientes;
 
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.dam2.carreras.modelo.Carrera;
+import org.dam2.carreras.modelo.Corredor;
+import org.dam2.carreras.modelo.Participacion;
+import org.dam2.carreras.modelo.Sexo;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
 
 public class ClienteRest {
 	
-	private static final String URIBASE="http://localhost:8080/corredor";
+	private static final String URIBASE="http://localhost:8080";
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		cargarDatos();
+		insertarCorredorCarrera();
+		insertarTiempos();
 	}
 	
 	
+	private static void insertarTiempos() {
+		// TODO Auto-generated method stub
+		RestTemplate restTemplate=new RestTemplate();
+		String uriCons=URIBASE+"/participaciones/{ncarrera}";
+		String uri=URIBASE+"/actualizarpart/{ncarrera}";
+		List<Participacion> participaciones=Stream.of(restTemplate.getForObject(uriCons, Participacion[].class,"Santos")).toList();
+		participaciones.forEach();
+	}
+
+
+	private static void insertarCorredorCarrera() {
+		// TODO Auto-generated method stub
+		RestTemplate restTemplate=new RestTemplate();
+		String uri=URIBASE+"/app/inscribir/{ncarrera}";
+		ResponseEntity<Integer> response;
+		String nCa="";
+		
+		Corredor c=Corredor.builder()
+				.dni("003")
+				.nombre("El Tercero")
+				.sexo(Sexo.HOMBRE)
+				.build();
+		
+		Carrera[] carr=restTemplate.getForObject(URIBASE+"/carreras/findall",Carrera[].class);
+		List<Carrera> carreras= Arrays.stream(carr).toList();
+		
+		do {
+			carreras.forEach(car-> System.out.println(car.getNombre()));
+			nCa="Santos";
+		}while(!carreras.contains(Carrera.builder().nombre(nCa).build()));
+		
+		try {
+			response=restTemplate.postForEntity(uri, c, Integer.class, nCa);
+			System.out.println("El dorsal es: "+response.getBody());
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+
+
 	private static void cargarDatos() {
 		// TODO Auto-generated method stub
 		RestTemplate restTemplate=new RestTemplate();
-		String uri=URIBASE+"/cargar";
+		String uri=URIBASE+"/app/cargar";
 		try{
 			System.out.println(restTemplate.getForEntity(uri, String.class).getBody());
 		}catch (Exception e) {

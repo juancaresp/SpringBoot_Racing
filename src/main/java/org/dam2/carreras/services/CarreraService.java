@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.dam2.carreras.modelo.Carrera;
+import org.dam2.carreras.modelo.Corredor;
 import org.dam2.carreras.modelo.Participacion;
 import org.dam2.carreras.repository.CarreraRepository;
 import org.dam2.carreras.repository.CorredorRepository;
@@ -31,7 +32,7 @@ public class CarreraService implements ICarreraService {
 		
 		return exito;
 	}
-
+	
 	@Override
 	public boolean update(Carrera c) {
 		boolean exito=true;
@@ -65,6 +66,34 @@ public class CarreraService implements ICarreraService {
 	public Optional<Carrera> findByNombre(String nombre) {
 		// TODO Auto-generated method stub
 		return carreraR.findById(nombre);
+	}
+
+	@Override
+	public int insertarCorredor(Corredor c,String nCarrera) {
+		int dor=-1;
+		Optional<Carrera> ca=carreraR.findById(nCarrera);
+		if(ca.isPresent()) {
+			dor=participacionR.findByCarrera(ca.get()).size();
+			if(dor<ca.get().getMax()) {
+				dor++;
+				Participacion pa=Participacion.builder()
+									.carrera(ca.get())
+									.corredor(c)
+									.tiempo(-1)
+									.dorsal(dor)
+									.build();
+				participacionR.save(pa);
+			}else {
+				dor=-1;
+			}
+		}
+		return dor;
+	}
+
+	@Override
+	public List<Participacion> findPartByCarrera(String ncarrera) {
+		// TODO Auto-generated method stub
+		return findPartByCarrera(ncarrera);
 	}
 
 }

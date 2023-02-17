@@ -4,6 +4,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -23,12 +25,13 @@ public class Participacion {
 	@Id
 	@EqualsAndHashCode.Include
 	@Column(nullable = false,length = 10)
-	private String id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Carrera carrera;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Corredor corredor;
 	
 	private int tiempo;
