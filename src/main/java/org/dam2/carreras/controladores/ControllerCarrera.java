@@ -53,8 +53,10 @@ public class ControllerCarrera {
 			part=carreraS.findPartByCarrera(ca.getNombre());
 			if(part.size()!=0) {
 				if(part.size()<ca.getMax()) {
-					if(part.get(i).getCorredor().equals(corredor)) {
-						exito=false;
+					for(int j=0;j<part.size()&&exito;j++) {
+						if(part.get(j).getCorredor().equals(corredor)) {
+							exito=false;
+						}
 					}
 				}else {
 					exito=false;
