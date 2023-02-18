@@ -38,7 +38,6 @@ public class Carrera {
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	private Set<PuntoControl> puntosControl;
 	
-	
 	private LocalDate fecha;
 
 }

@@ -20,4 +20,6 @@ public interface ICarreraService {
 	public Optional<Carrera> findByNombre (String nombre);
 	public int insertarCorredor(Corredor c,String nCarrera);
 	public List<Participacion> findPartByCarrera(String ncarrera);
+
+	public boolean actualizarParticipaciones(List<Participacion> carreras);
 }

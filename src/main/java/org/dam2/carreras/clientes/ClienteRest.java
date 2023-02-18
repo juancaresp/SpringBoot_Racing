@@ -23,16 +23,45 @@ public class ClienteRest {
 		cargarDatos();
 		insertarCorredorCarrera();
 		insertarTiempos();
+		consultarCoPrimeraCarr();
 	}
 	
 	
+	private static void consultarCoPrimeraCarr() {
+		RestTemplate restTemplate=new RestTemplate();
+		String uri=URIBASE+"/corredor/findCoPrimeraCarr";
+		String[] corredores;
+		try {
+			corredores=restTemplate.getForObject(uri, String[].class);
+			for(int i=0;i<corredores.length;i++) {
+				System.out.println(corredores[i]);
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+
+
 	private static void insertarTiempos() {
 		// TODO Auto-generated method stub
 		RestTemplate restTemplate=new RestTemplate();
-		String uriCons=URIBASE+"/participaciones/{ncarrera}";
-		String uri=URIBASE+"/actualizarpart/{ncarrera}";
-		List<Participacion> participaciones=Stream.of(restTemplate.getForObject(uriCons, Participacion[].class,"Santos")).toList();
-		participaciones.forEach();
+		String uriCons=URIBASE+"/carreras/participaciones/{ncarrera}";
+		String uri=URIBASE+"/carreras/actualizarpart";
+		String nCa="";
+		
+		nCa = pedirCarrera();
+		
+		List<Participacion> participaciones=Stream.of(restTemplate.getForObject(uriCons, Participacion[].class,nCa)).toList();
+		participaciones.forEach(p->p.setTiempo(20));//En el set tiempo pediriamos el tiempo
+		try {
+			restTemplate.put(uri,participaciones, String.class);
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
 	}
 
 
@@ -49,13 +78,7 @@ public class ClienteRest {
 				.sexo(Sexo.HOMBRE)
 				.build();
 		
-		Carrera[] carr=restTemplate.getForObject(URIBASE+"/carreras/findall",Carrera[].class);
-		List<Carrera> carreras= Arrays.stream(carr).toList();
-		
-		do {
-			carreras.forEach(car-> System.out.println(car.getNombre()));
-			nCa="Santos";
-		}while(!carreras.contains(Carrera.builder().nombre(nCa).build()));
+		nCa = pedirCarrera();
 		
 		try {
 			response=restTemplate.postForEntity(uri, c, Integer.class, nCa);
@@ -65,6 +88,20 @@ public class ClienteRest {
 			e.printStackTrace();
 		}
 		
+	}
+
+
+	private static String pedirCarrera() {
+		RestTemplate restTemplate=new RestTemplate();
+		String nCa;
+		String[] carr=restTemplate.getForObject(URIBASE+"/carreras/findallid",String[].class);
+		List<String> carreras= Arrays.stream(carr).toList();
+		
+		do {
+			carreras.forEach(car-> System.out.println(car));
+			nCa="Santos";
+		}while(!carreras.contains(nCa));
+		return nCa;
 	}
 
 

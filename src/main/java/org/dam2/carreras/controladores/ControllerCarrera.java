@@ -1,6 +1,7 @@
 package org.dam2.carreras.controladores;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.dam2.carreras.modelo.Carrera;
 import org.dam2.carreras.modelo.Participacion;
@@ -28,6 +29,16 @@ public class ControllerCarrera {
 	public ResponseEntity<List<Carrera>> findAllCarreras(){
 		return new ResponseEntity<List<Carrera>>(carreraS.findAll(),HttpStatus.ACCEPTED);
 	}
+	
+	@GetMapping("/findallid")
+	public ResponseEntity<List<String>> findAllIdCarreras(){
+		List<String> carreras=carreraS.findAll().stream().map(ca->ca.getNombre()).collect(Collectors.toList());
+		
+		return new ResponseEntity<List<String>>(carreras,HttpStatus.ACCEPTED);
+	}
+	
+	
+	
 	@GetMapping("/participaciones/{ncarrera}")
 	public ResponseEntity<List<Participacion>> findParticipacionByCarrera(@PathVariable String ncarrera){
 		ResponseEntity<List<Participacion>> response=new ResponseEntity<List<Participacion>>(HttpStatus.BAD_REQUEST);
@@ -37,18 +48,17 @@ public class ControllerCarrera {
 		}
 		return response;
 	}
-		/*
-		@PutMapping("/actualizarpart/{ncarrera}")
-		public ResponseEntity<String> findParticipacionByCarrera(@RequestBody List<Carrera> ncarrera){
-			ResponseEntity<String> response=new ResponseEntity<String>("FALLO,cargado Incorrectamente",HttpStatus.BAD_REQUEST);
-			if(corredorS.findByDni(c.getDni()).isEmpty()) {
-				corredorS.insert(c);
-			}
-			int dorsal=carreraS.insertarCorredor(c,ncarrera);
-			if(dorsal!=-1) {
-				response=new ResponseEntity<String>("Cargado Correctamente",HttpStatus.ACCEPTED);
-			
-			return response;
-		}*/
+		
+	@PutMapping("/actualizarpart")
+	public ResponseEntity<String> findParticipacionByCarrera(@RequestBody List<Participacion> carreras){
+		
+		ResponseEntity<String> response=new ResponseEntity<String>("FALLO, actualizado Incorrectamente",HttpStatus.BAD_REQUEST);
+	
+		if(carreraS.actualizarParticipaciones(carreras)) {
+			response=new ResponseEntity<String>("Actualizado Correctamente",HttpStatus.OK);
+		}
+		
+		return response;
+	}
 }
 

@@ -8,5 +8,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ParticipacionRepository extends CrudRepository<Participacion, String> {
 
-	public List<Participacion> findByCarrera(Carrera c);
+	public List<Participacion> findByCarreraNombre(String c);
 }

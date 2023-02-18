@@ -73,7 +73,7 @@ public class CarreraService implements ICarreraService {
 		int dor=-1;
 		Optional<Carrera> ca=carreraR.findById(nCarrera);
 		if(ca.isPresent()) {
-			dor=participacionR.findByCarrera(ca.get()).size();
+			dor=participacionR.findByCarreraNombre(ca.get().getNombre()).size();
 			if(dor<ca.get().getMax()) {
 				dor++;
 				Participacion pa=Participacion.builder()
@@ -93,7 +93,23 @@ public class CarreraService implements ICarreraService {
 	@Override
 	public List<Participacion> findPartByCarrera(String ncarrera) {
 		// TODO Auto-generated method stub
-		return findPartByCarrera(ncarrera);
+		return participacionR.findByCarreraNombre(ncarrera);
+	}
+
+	@Override
+	public boolean actualizarParticipaciones(List<Participacion> carreras) {
+		// TODO Auto-generated method stub
+		boolean exito=false;
+		int guardadas=0;
+		for(int i=0;i<carreras.size();i++) {
+			participacionR.save(carreras.get(i));
+			guardadas++;
+		}
+		if(guardadas==carreras.size()) {
+			exito=true;
+		}
+		
+		return exito;
 	}
 
 }
