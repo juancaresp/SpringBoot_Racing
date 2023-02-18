@@ -1,6 +1,8 @@
 package org.dam2.carreras.clientes;
 
 
+import java.net.http.HttpRequest;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -9,8 +11,9 @@ import org.dam2.carreras.modelo.Carrera;
 import org.dam2.carreras.modelo.Corredor;
 import org.dam2.carreras.modelo.Participacion;
 import org.dam2.carreras.modelo.Sexo;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -71,14 +74,22 @@ public class ClienteRest {
 		String uri=URIBASE+"/app/inscribir/{ncarrera}";
 		ResponseEntity<Integer> response;
 		String nCa="";
+		boolean exito;
 		
 		Corredor c=Corredor.builder()
 				.dni("003")
 				.nombre("El Tercero")
 				.sexo(Sexo.HOMBRE)
 				.build();
+		List<Participacion> part;
 		
-		nCa = pedirCarrera();
+		String[] carr=restTemplate.postForObject(URIBASE+"/carreras/findalliddisp",c,String[].class);
+		List<String> carreras= Arrays.stream(carr).toList();
+		
+		do {
+			carreras.forEach(car-> System.out.println(car));
+			nCa="Santos";
+		}while(!carreras.contains(nCa));
 		
 		try {
 			response=restTemplate.postForEntity(uri, c, Integer.class, nCa);
