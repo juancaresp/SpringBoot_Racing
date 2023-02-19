@@ -15,17 +15,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Singular;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@RequiredArgsConstructor
 @Builder
 
 @Entity
 public class Carrera {
 
+	@NonNull
 	@Nonnull
 	@EqualsAndHashCode.Include
 	@Id
@@ -35,7 +39,7 @@ public class Carrera {
 	private int max;
 	
 	@Singular("puntoControl")
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.EAGER)
 	private Set<PuntoControl> puntosControl;
 	
 	private LocalDate fecha;

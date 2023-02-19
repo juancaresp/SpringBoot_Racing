@@ -34,6 +34,7 @@ public class ControladorCorredor {
 		String ca=carreraS.findAll().stream().sorted((c1,c2)->c1.getFecha().compareTo(c2.getFecha())).findFirst().get().getNombre();
 		List<Participacion> part=carreraS.findPartByCarrera(ca);
 		if(part.size()>0) {
+			part=part.stream().sorted((p1,p2)->p1.getTiempo()-p2.getTiempo()).toList();
 			for(int i=0;i<part.size();i++) {
 				Participacion pa=part.get(i);
 				result.add("Nombre: "+pa.getCorredor().getNombre()+" DNI: "+pa.getCorredor().getDni()+" Tiempo: "+pa.getTiempo());
